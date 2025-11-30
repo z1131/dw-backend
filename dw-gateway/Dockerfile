@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jre-focal
+FROM eclipse-temurin:21-jre-focal
 VOLUME /tmp
 WORKDIR /app
 COPY target/*.jar app.jar
