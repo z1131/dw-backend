@@ -27,14 +27,14 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <flyway.version>9.22.3</flyway.version>
         <mysql.version>8.3.0</mysql.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.34</lombok.version>
         <hutool.version>5.8.25</hutool.version>
         <jwt.version>4.4.0</jwt.version>
-        <spring-ai.version>0.8.1</spring-ai.version>
     </properties>
 
     <modules>
         <module>dw-common</module>
+        <module>dw-api</module>
         <module>dw-gateway</module>
         <module>dw-auth</module>
         <module>dw-core</module>
@@ -66,19 +66,15 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Spring AI BOM -->
-            <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-bom</artifactId>
-                <version>${spring-ai.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- Internal Modules -->
             <dependency>
                 <groupId>com.deepwrite</groupId>
                 <artifactId>dw-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.deepwrite</groupId>
+                <artifactId>dw-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -97,6 +93,13 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
                 <version>${flyway.version}</version>
+            </dependency>
+
+            <!-- Dubbo (Explicit management) -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>3.2.11</version>
             </dependency>
 
             <!-- Tools -->
