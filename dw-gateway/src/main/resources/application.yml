@@ -5,7 +5,7 @@ spring:
   application:
     name: dw-gateway
   config:
-    import: nacos:
+    import: "nacos:"
   cloud:
     nacos:
       discovery:
