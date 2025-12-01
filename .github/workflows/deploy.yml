@@ -4,10 +4,6 @@ name: Deploy Backend (Aliyun ACR)
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'dw-backend/**'
-      - 'deploy/**'
-      - '.github/workflows/deploy.yml'
 
 env:
   REGISTRY: crpi-16uyo5eg9cykcl2r.cn-hangzhou.personal.cr.aliyuncs.com
