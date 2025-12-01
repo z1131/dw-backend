@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: dw-auth
+  config:
+    import: nacos:
   cloud:
     nacos:
       discovery:
