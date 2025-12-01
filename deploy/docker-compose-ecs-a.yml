@@ -13,17 +13,12 @@ services:
       - MYSQL_SERVICE_DB_NAME=nacos_config
       - MYSQL_SERVICE_USER=${MYSQL_USER}
       - MYSQL_SERVICE_PASSWORD=${MYSQL_PASSWORD}
-    ports:
-      - "8848:8848"
-      - "9848:9848"
     network_mode: "host" # Use host network for Nacos to bind 172.17.150.78 directly
     restart: always
 
   dw-nginx:
     image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/dw-fronted:latest
     container_name: dw-nginx
-    ports:
-      - "80:80"
     network_mode: "host"
     restart: always
 
@@ -31,8 +26,6 @@ services:
   dw-gateway:
     image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/dw-gateway:latest
     container_name: dw-gateway
-    ports:
-      - "8080:8000" # Listen on 8080
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR=127.0.0.1:8848 # Since Nacos is on same host
