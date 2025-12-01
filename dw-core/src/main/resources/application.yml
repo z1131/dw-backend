@@ -2,30 +2,18 @@ server:
   port: 8002
 
 spring:
-  application:
-    name: dw-core
-  config:
-    import: "nacos:"
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        file-extension: yaml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dw_core?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: password
-  data: # Add Redis configuration
+  data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
   
-  # Gemini API Key (for native client)
   ai:
     google:
       gemini:
@@ -38,8 +26,8 @@ mybatis-plus:
 dubbo:
   protocol:
     name: dubbo
-    port: 20881 # Use a different port if running on the same machine as Auth Service
+    port: 20881
   registry:
-    address: nacos://127.0.0.1:8848
+    address: nacos://${SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR:127.0.0.1:8848}
   consumer:
-    check: false # Don't fail startup if provider is missing
+    check: false

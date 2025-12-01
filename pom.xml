@@ -66,6 +66,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- Bootstrap (Legacy support for Nacos Config) -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            </dependency>
+
             <!-- Internal Modules -->
             <dependency>
                 <groupId>com.deepwrite</groupId>

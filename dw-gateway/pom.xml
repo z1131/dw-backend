@@ -12,6 +12,10 @@
     <artifactId>dw-gateway</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
         <!-- Gateway Core -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

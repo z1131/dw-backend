@@ -2,28 +2,23 @@ server:
   port: 8001
 
 spring:
-  application:
-    name: dw-auth
-  config:
-    import: "nacos:"
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        file-extension: yaml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dw_auth?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
-    password: password # TODO: Change for prod
-  data: # Add Redis configuration
+    password: password
+  data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:default_secret_for_dev}
+  expiration: 3600
+  refresh-expiration: 604800
 
 mybatis-plus:
   configuration:
@@ -32,8 +27,8 @@ mybatis-plus:
 dubbo:
   protocol:
     name: dubbo
-    port: 20880 # Default dubbo port
+    port: 20880
   registry:
-    address: nacos://127.0.0.1:8848
+    address: nacos://${SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR:127.0.0.1:8848}
   scan:
-    base-packages: com.deepwrite.auth.service # Scan for @DubboService
+    base-packages: com.deepwrite.auth.service
