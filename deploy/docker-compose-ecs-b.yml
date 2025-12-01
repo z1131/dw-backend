@@ -16,4 +16,5 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     network_mode: "host"
+    mem_limit: 1g # Core might need more for AI tasks
     restart: always

@@ -14,6 +14,7 @@ services:
       - MYSQL_SERVICE_USER=${MYSQL_USER}
       - MYSQL_SERVICE_PASSWORD=${MYSQL_PASSWORD}
     network_mode: "host" # Use host network for Nacos to bind 172.17.150.78 directly
+    mem_limit: 1g # Nacos often needs more memory
     restart: always
 
   dw-nginx:
@@ -34,6 +35,7 @@ services:
       - SPRING_CLOUD_NACOS_USERNAME=${NACOS_USERNAME}
       - SPRING_CLOUD_NACOS_PASSWORD=${NACOS_PASSWORD}
     network_mode: "host" # Use host network to access Nacos and expose port
+    mem_limit: 512m
     restart: always
 
   dw-auth:
@@ -51,4 +53,5 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
     network_mode: "host"
+    mem_limit: 512m
     restart: always
