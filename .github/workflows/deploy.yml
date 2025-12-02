@@ -86,8 +86,8 @@ jobs:
             export ACR_REGISTRY=crpi-16uyo5eg9cykcl2r.cn-hangzhou.personal.cr.aliyuncs.com
             export ACR_NAMESPACE=deepwrite
             
-            docker-compose -f docker-compose-ecs-a.yml pull
-            docker-compose -f docker-compose-ecs-a.yml up -d
+            docker compose -f docker-compose-ecs-a.yml pull
+            docker compose -f docker-compose-ecs-a.yml up -d
             docker image prune -f
 
   deploy-ecs-b:
@@ -121,6 +121,6 @@ jobs:
             export ACR_REGISTRY=crpi-16uyo5eg9cykcl2r.cn-hangzhou.personal.cr.aliyuncs.com
             export ACR_NAMESPACE=deepwrite
             
-            docker-compose -f docker-compose-ecs-b.yml pull
-            docker-compose -f docker-compose-ecs-b.yml up -d
+            docker compose -f docker-compose-ecs-b.yml pull
+            docker compose -f docker-compose-ecs-b.yml up -d
             docker image prune -f
