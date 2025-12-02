@@ -22,6 +22,9 @@ public class ProjectAppServiceImpl implements ProjectAppService {
         Project project = new Project();
         project.setUserId(userId);
         project.setStatus("INIT");
+        project.setCreatedAt(java.time.LocalDateTime.now());
+        project.setUpdatedAt(java.time.LocalDateTime.now());
+        project.setDeleted(false);
         
         projectMapper.insert(project);
         
