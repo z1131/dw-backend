@@ -2,19 +2,11 @@ server:
   port: 8080
 
 spring:
-  application:
-    name: dw-gateway
   cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        file-extension: yaml
     gateway:
       discovery:
         locator:
-          enabled: true # Allow auto-routing based on service name
+          enabled: true
           lower-case-service-id: true
       routes:
         - id: dw-auth
@@ -22,10 +14,10 @@ spring:
           predicates:
             - Path=/api/auth/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
         - id: dw-core
           uri: lb://dw-core
           predicates:
             - Path=/api/core/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2

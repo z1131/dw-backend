@@ -1,5 +1,0 @@
-com/deepwrite/core/application/service/TopicAppService.class
-com/deepwrite/core/application/service/TopicAppService$1.class
-com/deepwrite/core/infrastructure/ai/GeminiClient.class
-com/deepwrite/core/DwCoreApplication.class
-com/deepwrite/core/interfaces/web/TopicController.class
