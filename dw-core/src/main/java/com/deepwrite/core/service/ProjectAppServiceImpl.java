@@ -1,0 +1,44 @@
+package com.deepwrite.core.service;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.deepwrite.api.dto.ProjectDTO;
+import com.deepwrite.api.service.ProjectAppService;
+import com.deepwrite.common.model.Response;
+import com.deepwrite.core.entity.Project;
+import com.deepwrite.core.mapper.ProjectMapper;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@DubboService
+@Service
+public class ProjectAppServiceImpl implements ProjectAppService {
+
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    @Override
+    public Response<ProjectDTO> createProject(Long userId) {
+        Project project = new Project();
+        project.setUserId(userId);
+        project.setStatus("INIT");
+        
+        projectMapper.insert(project);
+        
+        ProjectDTO dto = new ProjectDTO();
+        BeanUtil.copyProperties(project, dto);
+        return Response.success(dto);
+    }
+
+    @Override
+    public Response<ProjectDTO> getProject(Long id) {
+        Project project = projectMapper.selectById(id);
+        if (project == null) {
+            // Use generic error code for now
+            return Response.error(404, "Project not found");
+        }
+        ProjectDTO dto = new ProjectDTO();
+        BeanUtil.copyProperties(project, dto);
+        return Response.success(dto);
+    }
+}
