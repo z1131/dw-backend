@@ -25,8 +25,20 @@ public class TopicController {
         return topicAppService.confirmTopic(projectId, request);
     }
 
+    @Autowired
+    private com.deepwrite.core.service.TopicAnalysisService topicAnalysisService;
+
+    @PostMapping(value = "/analyze", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Response<Object> analyzeTopic(
+            @PathVariable("projectId") Long projectId,
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file,
+            @RequestParam("topicTitle") String topicTitle) {
+        return topicAnalysisService.analyzeTopic(projectId, file, topicTitle);
+    }
+
     @Data
     public static class GenerateRequest {
+
         private String initialIdea;
 
         public String getInitialIdea() {

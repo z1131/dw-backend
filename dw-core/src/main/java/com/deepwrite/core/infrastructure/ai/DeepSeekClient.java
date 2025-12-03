@@ -60,6 +60,42 @@ public class DeepSeekClient {
         }
     }
 
+    public String analyzeTopic(String topic, String fileContent) {
+        String prompt = TopicAnalysisPrompt.build(topic, fileContent);
+        String url = StrUtil.format("{}/chat/completions", baseUrl);
+
+        JSONObject message = new JSONObject();
+        message.set("role", "user");
+        message.set("content", prompt);
+
+        JSONArray messages = new JSONArray();
+        messages.add(message);
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.set("model", "deepseek-chat");
+        requestBody.set("messages", messages);
+        requestBody.set("temperature", 0.7);
+
+        try (HttpResponse response = HttpRequest.post(url)
+                .header("Authorization", "Bearer " + apiKey)
+                .header("Content-Type", "application/json")
+                .body(requestBody.toString())
+                .timeout(60000)
+                .execute()) {
+
+            if (!response.isOk()) {
+                log.error("DeepSeek API failed: {} - {}", response.getStatus(), response.body());
+                throw new RuntimeException("DeepSeek API returned " + response.getStatus());
+            }
+
+            String responseBody = response.body();
+            return parseDeepSeekResponse(responseBody);
+        } catch (Exception e) {
+            log.error("DeepSeek API error", e);
+            throw new RuntimeException("DeepSeek API call failed", e);
+        }
+    }
+
     private String parseDeepSeekResponse(String responseBody) {
         try {
             JSONObject json = JSONUtil.parseObj(responseBody);
