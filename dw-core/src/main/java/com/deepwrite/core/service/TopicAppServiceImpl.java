@@ -30,11 +30,7 @@ public class TopicAppServiceImpl implements TopicAppService {
     private final TopicCandidateMapper topicCandidateMapper;
     private final DeepSeekClient deepSeekClient;
 
-    public TopicAppServiceImpl(ProjectMapper projectMapper, TopicCandidateMapper topicCandidateMapper, DeepSeekClient deepSeekClient) {
-        this.projectMapper = projectMapper;
-        this.topicCandidateMapper = topicCandidateMapper;
-        this.deepSeekClient = deepSeekClient;
-    }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
