@@ -15,7 +15,7 @@ spring:
       password: ${REDIS_PASSWORD}
   
   flyway:
-    enabled: false
+    enabled: true
 
   ai:
     google:
