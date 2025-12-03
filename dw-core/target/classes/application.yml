@@ -31,6 +31,6 @@ dubbo:
     name: dubbo
     port: 20881
   registry:
-    address: nacos://${SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR:127.0.0.1:8848}
+    address: N/A
   consumer:
     check: false

@@ -1,4 +1,6 @@
+com/deepwrite/api/dto/ConfirmTopicRequest.class
 com/deepwrite/api/model/dto/TopicDTO.class
+com/deepwrite/api/service/TopicAppService.class
 com/deepwrite/api/dto/ProjectDTO.class
 com/deepwrite/api/model/request/GenerateTopicRequest.class
 com/deepwrite/api/service/ProjectAppService.class

@@ -1,84 +1,75 @@
 package com.deepwrite.core.infrastructure.ai;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
 
-@Service
+@Component
 public class GeminiClient {
 
     private static final Logger log = LoggerFactory.getLogger(GeminiClient.class);
-    private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
 
-    private final String apiKey;
-    private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
+    @Value("${spring.ai.google.gemini.api-key}")
+    private String apiKey;
 
-    public GeminiClient(@Value("${spring.ai.google.gemini.api-key}") String apiKey, ObjectMapper objectMapper) {
-        this.apiKey = apiKey;
-        this.objectMapper = objectMapper;
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
-    }
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={}";
 
-    public String call(String promptText) {
-        try {
-            // 1. Build Request Body
-            // { "contents": [{ "parts": [{ "text": "..." }] }] }
-            ObjectNode root = objectMapper.createObjectNode();
-            ArrayNode contents = root.putArray("contents");
-            ObjectNode content = contents.addObject();
-            ArrayNode parts = content.putArray("parts");
-            parts.addObject().put("text", promptText);
+    public String generateTopics(String initialIdea) {
+        String prompt = TopicGenerationPrompt.build(initialIdea);
+        String url = StrUtil.format(API_URL, apiKey);
 
-            String requestBody = objectMapper.writeValueAsString(root);
+        // Construct Gemini Request Body
+        JSONObject contentPart = new JSONObject().set("text", prompt);
+        JSONObject parts = new JSONObject().set("parts", new JSONArray().put(contentPart));
+        JSONObject requestBody = new JSONObject().set("contents", new JSONArray().put(parts));
 
-            // 2. Build HTTP Request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(GEMINI_URL + apiKey))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .timeout(Duration.ofSeconds(30))
-                    .build();
+        log.info("Calling Gemini API for topic generation...");
+        try (HttpResponse response = HttpRequest.post(url)
+                .body(requestBody.toString())
+                .timeout(30000) // 30s timeout
+                .execute()) {
 
-            // 3. Send
-            log.info("Sending request to Gemini...");
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() != 200) {
-                log.error("Gemini API Error: {} - {}", response.statusCode(), response.body());
-                throw new RuntimeException("Gemini API call failed with status " + response.statusCode());
+            if (!response.isOk()) {
+                log.error("Gemini API failed: {} - {}", response.getStatus(), response.body());
+                throw new RuntimeException("AI Service Unavailable");
             }
 
-            // 4. Parse Response
-            // { "candidates": [ { "content": { "parts": [ { "text": "..." } ] } } ] }
-            JsonNode responseRoot = objectMapper.readTree(response.body());
-            JsonNode candidates = responseRoot.path("candidates");
-            if (candidates.isArray() && candidates.size() > 0) {
-                JsonNode firstCandidate = candidates.get(0);
-                JsonNode partsNode = firstCandidate.path("content").path("parts");
-                if (partsNode.isArray() && partsNode.size() > 0) {
-                    return partsNode.get(0).path("text").asText();
-                }
-            }
-            
-            return ""; // Or throw exception if empty
+            String responseBody = response.body();
+            return parseGeminiResponse(responseBody);
 
         } catch (Exception e) {
             log.error("Error calling Gemini API", e);
-            throw new RuntimeException("Failed to call AI service", e);
+            throw new RuntimeException("Failed to generate topics", e);
+        }
+    }
+
+    private String parseGeminiResponse(String responseBody) {
+        try {
+            JSONObject json = JSONUtil.parseObj(responseBody);
+            // Navigate: candidates[0].content.parts[0].text
+            String text = json.getJSONArray("candidates")
+                    .getJSONObject(0)
+                    .getJSONObject("content")
+                    .getJSONArray("parts")
+                    .getJSONObject(0)
+                    .getStr("text");
+            
+            // Clean up potential markdown code blocks if the prompt instruction failed
+            return StrUtil.cleanBlank(text.replace("```json", "").replace("```", ""));
+        } catch (Exception e) {
+            log.error("Failed to parse Gemini response: {}", responseBody, e);
+            throw new RuntimeException("Invalid AI Response Format");
         }
     }
 }

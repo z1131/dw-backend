@@ -1,0 +1,12 @@
+com/deepwrite/core/service/ProjectAppServiceImpl.class
+com/deepwrite/core/controller/ProjectController.class
+com/deepwrite/core/controller/TopicController$GenerateRequest.class
+com/deepwrite/core/DwCoreApplication.class
+com/deepwrite/core/entity/Project.class
+com/deepwrite/core/infrastructure/ai/GeminiClient.class
+com/deepwrite/core/mapper/ProjectMapper.class
+com/deepwrite/core/controller/TopicController.class
+com/deepwrite/core/mapper/TopicCandidateMapper.class
+com/deepwrite/core/infrastructure/ai/TopicGenerationPrompt.class
+com/deepwrite/core/entity/TopicCandidate.class
+com/deepwrite/core/service/TopicAppServiceImpl.class
