@@ -10,7 +10,7 @@ spring:
         username: ${SPRING_CLOUD_NACOS_USERNAME:nacos}
         password: ${SPRING_CLOUD_NACOS_PASSWORD:nacos}
       discovery:
-        enabled: false
+        enabled: true
         server-addr: ${SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR:127.0.0.1:8848}
         username: ${SPRING_CLOUD_NACOS_USERNAME:nacos}
         password: ${SPRING_CLOUD_NACOS_PASSWORD:nacos}
