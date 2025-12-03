@@ -16,12 +16,12 @@ public class TopicController {
     private TopicAppService topicAppService;
 
     @PostMapping("/generate")
-    public Response<List<Object>> generateTopics(@PathVariable Long projectId, @RequestBody GenerateRequest request) {
+    public Response<List<Object>> generateTopics(@PathVariable("projectId") Long projectId, @RequestBody GenerateRequest request) {
         return topicAppService.generateTopics(projectId, request.getInitialIdea());
     }
 
     @PostMapping("/confirm")
-    public Response<Boolean> confirmTopic(@PathVariable Long projectId, @RequestBody com.deepwrite.api.dto.ConfirmTopicRequest request) {
+    public Response<Boolean> confirmTopic(@PathVariable("projectId") Long projectId, @RequestBody com.deepwrite.api.dto.ConfirmTopicRequest request) {
         return topicAppService.confirmTopic(projectId, request);
     }
 
