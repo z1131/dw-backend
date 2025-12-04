@@ -2,6 +2,10 @@ server:
   port: 8002
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/deepwrite?useUnicode=true&characterEncoding=utf-8&useSSL=false
