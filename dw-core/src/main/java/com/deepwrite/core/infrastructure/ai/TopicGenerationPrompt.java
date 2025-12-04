@@ -9,10 +9,11 @@ public class TopicGenerationPrompt {
             
             Output Format:
             Strictly return a JSON array of objects. Each object must have:
-            - "title": A catchy title.
-            - "summary": A brief description (1-2 sentences).
-            - "rationale": Why this angle is interesting.
+            - "title": A catchy title in Chinese.
+            - "summary": A brief description (1-2 sentences) in Chinese.
+            - "rationale": Why this angle is interesting (in Chinese).
             
+            Important: The content MUST be in Chinese.
             Do not include any markdown formatting (like ```json). Just the raw JSON string.
             """;
 
