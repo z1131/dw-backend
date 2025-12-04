@@ -17,12 +17,14 @@ public class TopicAnalysisPrompt {
                 
                 **Output Format:**
                 Return a JSON object with the following fields:
-                - "feasibility": (String) High/Medium/Low, with a brief explanation.
-                - "innovation": (String) High/Medium/Low, with a brief explanation.
-                - "suggestions": (Array of Strings) 3-5 specific suggestions to improve the topic.
-                - "refined_topic": (String) A suggested refined version of the topic (optional).
+                - "feasibility": (String) High/Medium/Low, with a brief explanation in Chinese.
+                - "innovation": (String) High/Medium/Low, with a brief explanation in Chinese.
+                - "suggestions": (Array of Strings) 3-5 specific suggestions to improve the topic in Chinese.
+                - "refined_topic": (String) A suggested refined version of the topic (optional) in Chinese.
                 
-                Ensure the JSON is valid and strictly follows this format.
+                **Important:** 
+                - The response MUST be in Chinese, except for specific academic terms that are better expressed in English.
+                - Ensure the JSON is valid and strictly follows this format.
                 """, topic, fileContent);
     }
 }
