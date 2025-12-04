@@ -6,6 +6,8 @@ import com.deepwrite.common.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/projects")
 public class ProjectController {
@@ -23,5 +25,12 @@ public class ProjectController {
     @GetMapping("/{id}")
     public Response<ProjectDTO> getProject(@PathVariable Long id) {
         return projectAppService.getProject(id);
+    }
+
+    @GetMapping
+    public Response<List<ProjectDTO>> listProjects(@RequestParam(required = false) Long userId) {
+        // Default to user 1001 if no userId provided
+        if (userId == null) userId = 1001L;
+        return projectAppService.listProjectsByUser(userId);
     }
 }

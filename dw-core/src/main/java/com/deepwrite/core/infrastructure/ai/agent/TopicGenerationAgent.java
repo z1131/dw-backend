@@ -1,8 +1,11 @@
-package com.deepwrite.core.infrastructure.ai;
+package com.deepwrite.core.infrastructure.ai.agent;
 
 import cn.hutool.core.util.StrUtil;
+import com.deepwrite.core.infrastructure.ai.LLMClient;
+import org.springframework.stereotype.Component;
 
-public class TopicGenerationPrompt {
+@Component
+public class TopicGenerationAgent extends AIAgent {
 
     private static final String SYSTEM_PROMPT = """
             You are a professional writing assistant. Your task is to generate 3-5 creative and distinct topic candidates based on the user's initial idea.
@@ -17,7 +20,17 @@ public class TopicGenerationPrompt {
             Do not include any markdown formatting (like ```json). Just the raw JSON string.
             """;
 
-    public static String build(String initialIdea) {
-        return StrUtil.format("{}\n\nUser Idea: {}", SYSTEM_PROMPT, initialIdea);
+    public TopicGenerationAgent(LLMClient llmClient) {
+        super(llmClient);
+    }
+
+    @Override
+    protected String getSystemPrompt() {
+        return SYSTEM_PROMPT;
+    }
+
+    public String generate(String initialIdea) {
+        String userMessage = StrUtil.format("User Idea: {}", initialIdea);
+        return this.call(userMessage);
     }
 }

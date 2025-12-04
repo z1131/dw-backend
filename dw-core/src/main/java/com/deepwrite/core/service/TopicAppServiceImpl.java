@@ -8,7 +8,6 @@ import com.deepwrite.api.service.TopicAppService;
 import com.deepwrite.common.model.Response;
 import com.deepwrite.core.entity.Project;
 import com.deepwrite.core.entity.TopicCandidate;
-import com.deepwrite.core.infrastructure.ai.DeepSeekClient;
 import com.deepwrite.core.mapper.ProjectMapper;
 import com.deepwrite.core.mapper.TopicCandidateMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TopicAppServiceImpl implements TopicAppService {
 
     private static final Logger log = LoggerFactory.getLogger(TopicAppServiceImpl.class);
 
     private final ProjectMapper projectMapper;
     private final TopicCandidateMapper topicCandidateMapper;
-    private final DeepSeekClient deepSeekClient;
+    private final com.deepwrite.core.infrastructure.ai.agent.TopicGenerationAgent topicGenerationAgent;
+
+    public TopicAppServiceImpl(ProjectMapper projectMapper, TopicCandidateMapper topicCandidateMapper, com.deepwrite.core.infrastructure.ai.agent.TopicGenerationAgent topicGenerationAgent) {
+        this.projectMapper = projectMapper;
+        this.topicCandidateMapper = topicCandidateMapper;
+        this.topicGenerationAgent = topicGenerationAgent;
+    }
 
 
 
@@ -44,7 +48,7 @@ public class TopicAppServiceImpl implements TopicAppService {
         // 2. Call AI
         String jsonResult;
         try {
-            jsonResult = deepSeekClient.generateTopics(initialIdea);
+            jsonResult = topicGenerationAgent.generate(initialIdea);
         } catch (Exception e) {
             return Response.error("AI Generation Failed: " + e.getMessage());
         }

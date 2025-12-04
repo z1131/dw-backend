@@ -3,26 +3,34 @@ package com.deepwrite.core.service;
 import cn.hutool.json.JSONUtil;
 import com.deepwrite.common.model.Response;
 import com.deepwrite.core.entity.TopicCandidate;
-import com.deepwrite.core.infrastructure.ai.DeepSeekClient;
 import com.deepwrite.core.infrastructure.oss.OssClient;
 import com.deepwrite.core.mapper.TopicCandidateMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
+
 public class TopicAnalysisService {
+
+    private static final Logger log = LoggerFactory.getLogger(TopicAnalysisService.class);
 
     private final OssClient ossClient;
     private final FileService fileService;
-    private final DeepSeekClient deepSeekClient;
+    private final com.deepwrite.core.infrastructure.ai.agent.TopicAnalysisAgent topicAnalysisAgent;
     private final TopicCandidateMapper topicCandidateMapper;
+
+    public TopicAnalysisService(OssClient ossClient, FileService fileService, com.deepwrite.core.infrastructure.ai.agent.TopicAnalysisAgent topicAnalysisAgent, TopicCandidateMapper topicCandidateMapper) {
+        this.ossClient = ossClient;
+        this.fileService = fileService;
+        this.topicAnalysisAgent = topicAnalysisAgent;
+        this.topicCandidateMapper = topicCandidateMapper;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public Response<Object> analyzeTopic(Long projectId, MultipartFile file, String topicTitle) {
@@ -42,7 +50,7 @@ public class TopicAnalysisService {
             }
 
             // 3. Call AI for analysis
-            String analysisResult = deepSeekClient.analyzeTopic(topicTitle, fileContent);
+            String analysisResult = topicAnalysisAgent.analyze(topicTitle, fileContent);
 
             // 4. Save result as a candidate (or just return it?)
             // Requirement says "Analyze Existing Documents". Usually this leads to a "Topic Candidate" with the analysis.
