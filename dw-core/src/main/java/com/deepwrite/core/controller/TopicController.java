@@ -47,8 +47,7 @@ public class TopicController {
         return response;
     }
 
-    @Autowired
-    private com.deepwrite.core.service.TopicAnalysisService topicAnalysisService;
+
 
     @PostMapping(value = "/analyze", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<Object> analyzeTopic(
